@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
+import javax.persistence.Query;
+import javax.transaction.Transaction;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,39 +17,43 @@ import java.util.List;
 @Repository
 @Transactional
 public class UserDao {
-    private static int count = 0;
+
 
     @Autowired
     private SessionFactory sessionFactory;
-    private List<User> users;
-    {
-        users = new ArrayList<>();
-        users.add(new User(++count, "Tom"));
-        users.add(new User(++count, "Julia"));
-        users.add(new User(++count, "Mike"));
-    }
 
     public List<User> index() {
         Session session = sessionFactory.getCurrentSession();
+        //List<User> result =
         return session.createQuery("from User").getResultList();
     }
 
     public User show (int id) {
-        return users.stream().filter(user -> user.getId() == id)
-                .findAny().orElse(null);
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM User where id=:userId");
+        query.setParameter("userId", id);
+        return (User)query.getResultList().get(0);
+        //return users.stream().filter(user -> user.getId() == id).findAny().orElse(null);
     }
 
     public void save(User user) {
-        user.setId(++count);
-        users.add(user);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(user);
     }
 
     public void update(int id, User updateUser) {
-        User user = show(id);
-        user.setName(updateUser.getName());
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("UPDATE User set name = :name WHERE id = :userId");
+        query.setParameter("name", updateUser.getName()).setParameter("userId", id);
+        int result = query.executeUpdate();
+        System.out.println("Rows affected: " + result);
     }
 
     public void delete(int id) {
-        users.removeIf(p -> p.getId() == id);
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("DELETE FROM User WHERE id = :userId");
+        query.setParameter("userId", id);
+        int result = query.executeUpdate();
+        System.out.println("Rows affected: " + result);
+        //users.removeIf(p -> p.getId() == id);
     }
 }

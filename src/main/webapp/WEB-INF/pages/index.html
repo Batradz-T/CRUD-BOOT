@@ -6,6 +6,7 @@
     <title>Users</title>
 </head>
 <body>
+<b>index.html</b>
 <div>
     <th:block th:each="user : ${users}">
         <p><a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.name}"></a></p>
