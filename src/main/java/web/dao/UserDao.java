@@ -1,20 +1,24 @@
 package web.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserDao {
     private static int count = 0;
 
-//    @Autowired
-//    private SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
     private List<User> users;
     {
         users = new ArrayList<>();
@@ -24,7 +28,8 @@ public class UserDao {
     }
 
     public List<User> index() {
-        return users;
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from User").getResultList();
     }
 
     public User show (int id) {
