@@ -56,6 +56,25 @@ public class WebConfig implements WebMvcConfigurer {
         return dataSource;
     }
 
+    @Bean
+    public EntityManager entityManager(){
+        Properties props = new Properties();
+        props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+        props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
+
+        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(getDataSource());
+        em.setPackagesToScan( "web.model" );
+        //em.setJpaVendorAdapter( new HibernateJpaVendorAdapter() );
+        em.setJpaProperties(props);
+        em.setPersistenceUnitName( "PUN" );
+        em.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+        em.afterPropertiesSet();
+        return em.getObject().createEntityManager();
+    }
+
+
 //    @Bean
 //    public LocalSessionFactoryBean getSessionFactory() {
 //        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
@@ -70,26 +89,6 @@ public class WebConfig implements WebMvcConfigurer {
 //        factoryBean.setAnnotatedClasses(User.class);
 //        return factoryBean;
 //    }
-
-
-    @Bean
-    public EntityManager entityManager(){
-        Properties props = new Properties();
-        props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-        props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
-
-        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(getDataSource());
-        em.setPackagesToScan( "model" );
-        //em.setJpaVendorAdapter( new HibernateJpaVendorAdapter() );
-        em.setJpaProperties(props);
-        em.setPersistenceUnitName( "PUN" );
-        em.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        em.afterPropertiesSet();
-        return em.getObject().createEntityManager();
-    }
-
 
 //    @Bean
 //    public HibernateTransactionManager getTransactionManager() {
