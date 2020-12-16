@@ -49,8 +49,7 @@ public class UserDao {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery("UPDATE User set name = :name WHERE id = :userId");
         query.setParameter("name", updateUser.getName()).setParameter("userId", id);
-        int result = query.executeUpdate();
-        System.out.println("result = " + result);
+        query.executeUpdate();
         entityManager.getTransaction().commit();
      }
 
