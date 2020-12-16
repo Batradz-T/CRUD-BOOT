@@ -1,5 +1,0 @@
-<persistence>
-    <persistence-unit name="PU">
-         <class>web.model.User</class>
-    </persistence-unit>
-</persistence>

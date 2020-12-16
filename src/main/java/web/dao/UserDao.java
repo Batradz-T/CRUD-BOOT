@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional
+//@Transactional
 public class UserDao {
 
 
@@ -38,25 +38,25 @@ public class UserDao {
     }
 
     public void save(User user) {
-        entityManager.getTransaction().begin();
+        //entityManager.getTransaction().begin();
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 
     public void update(int id, User updateUser) {
-        entityManager.getTransaction().begin();
+       // entityManager.getTransaction().begin();
         Query query = entityManager.createQuery("UPDATE User set name = :name WHERE id = :userId");
         query.setParameter("name", updateUser.getName()).setParameter("userId", id);
         int result = query.executeUpdate();
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
      }
 
     public void delete(int id) {
-        entityManager.getTransaction().begin();
+        //entityManager.getTransaction().begin();
         Query query = entityManager.createQuery("DELETE FROM User WHERE id = :userId");
         query.setParameter("userId", id);
         int result = query.executeUpdate();
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
 
 
     }
