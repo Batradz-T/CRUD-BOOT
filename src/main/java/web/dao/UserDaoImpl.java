@@ -28,14 +28,14 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private EntityManager entityManager;
 
-    public List<User> index() {
+    public List<User> getAllUsers() {
         entityManager.getTransaction().begin();
         List<User> users = entityManager.createQuery("from User").getResultList();
         entityManager.getTransaction().commit();
         return users;
     }
 
-    public User show (int id) {
+    public User getUserById(int id) {
         Query query = entityManager.createQuery("FROM User where id=:userId");
         query.setParameter("userId", id);
         return (User)query.getResultList().get(0);

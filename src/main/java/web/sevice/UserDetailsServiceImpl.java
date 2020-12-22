@@ -18,12 +18,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDaoImpl userDaoImpl = new UserDaoImpl();
 
 
-    public List<User> index() {
-        return userDaoImpl.index();
+    public List<User> getAllUsers() {
+        return userDaoImpl.getAllUsers();
     }
 
-    public User show (int id) {
-        return userDaoImpl.show(id);
+    public User getUserById (int id) {
+        return userDaoImpl.getUserById(id);
     }
 
     public void save(User user) {
