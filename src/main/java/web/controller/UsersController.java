@@ -18,12 +18,6 @@ public class UsersController {
     @Autowired
     private UserDetailsServiceImpl userService;
 
-//    @GetMapping("/{id}")
-//    public String getUserById(@PathVariable("id") int id, Model model) {
-//        model.addAttribute("user", userService.getUserById(id));
-//        return "show";
-//    }
-
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
         //model.addAttribute("user", new User());
