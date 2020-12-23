@@ -15,38 +15,26 @@ import java.util.Set;
 @Table(name="users")
 public class User implements UserDetails {
     @Id
-    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name="name")
-    private String name;
+    private String name; // уникальное значение
 
-    @Transient
-    private Set<Role> roles;
+    @Column(name="password")
+    private String password;
 
-    @Transient
-    private String password;  //private String name; // уникальное значение
-
-//    public User(int id, String name) {
-//        this.name = name;
-//        this.id = id;
-//    }
+    @OneToOne (cascade=CascadeType.ALL)
+    @JoinColumn (name="id")
+    private  Role role;
 
     public User() {}
 
-    public User(int id, String name, String password, Set<Role> roles) {
-        this.id = id;
+    public User(String name, String password, String role) {
         this.name = name;
         this.password = password;
-        this.roles = roles;
-    }
-
-    public User(int id, String name, String password) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.roles = Collections.singleton(new Role(2, "ROLE_USER"));
+        this.role  = new Role(role);
     }
 
     public String getName() {
@@ -65,17 +53,19 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", role=" + role.getRole() +
+//                ", password='" + password + '\'' +
+//                '}';
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return Collections.singleton(role);
     }
 
     @Override
@@ -112,11 +102,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

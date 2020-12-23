@@ -2,27 +2,24 @@ package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import web.model.Role;
 import web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Collections;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 
 @Repository
 //@Transactional
 public class UserDaoImpl implements UserDao {
 
-    private final Map<String, User> userMap;
-
-        public UserDaoImpl() {
-            userMap = new HashMap<>();
-            userMap.put("admin",new User(1, "admin", "admin", Collections.singleton(new Role(1, "ROLE_ADMIN"))));
-            userMap.put("user",new User(2, "user", "user", Collections.singleton(new Role(2, "ROLE_USER"))));
-    }
+//    private final Map<String, User> userMap;
+//
+//        public UserDaoImpl() {
+//            userMap = new HashMap<>();
+//            userMap.put("admin",new User(1, "admin", "admin", Collections.singleton(new Role(1, "ROLE_ADMIN"))));
+//            userMap.put("user",new User(2, "user", "user", Collections.singleton(new Role(2, "ROLE_USER"))));
+//    }
 
 
     @Autowired
@@ -50,8 +47,9 @@ public class UserDaoImpl implements UserDao {
 
     public void update(int id, User updateUser) {
         entityManager.getTransaction().begin();
-        Query query = entityManager.createQuery("UPDATE User set name = :name WHERE id = :userId");
-        query.setParameter("name", updateUser.getName()).setParameter("userId", id);
+        Query query = entityManager.createQuery("UPDATE User set name = :name, password = :password WHERE id = :userId");
+        query.setParameter("name", updateUser.getName()).setParameter("userId", id)
+                .setParameter("password", updateUser.getPassword());
         query.executeUpdate();
         entityManager.getTransaction().commit();
      }
@@ -66,10 +64,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByName(String name) {
-        if (!userMap.containsKey(name)) {
+        Query query = entityManager.createQuery("FROM User where name=:userName");
+        query.setParameter("userName", name);
+        List result = query.getResultList();
+        if (result.isEmpty()) {
             return null;
         }
-        return userMap.get(name);
+        return (User)result.get(0);
     }
 
 //        @Autowired

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import web.model.Role;
 import web.model.User;
 import web.sevice.UserDetailsServiceImpl;
 
@@ -19,14 +20,16 @@ public class UsersController {
     private UserDetailsServiceImpl userService;
 
     @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
-        //model.addAttribute("user", new User());
+    public String newUser() {
         return "new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user")  User user) {
-        userService.save(user);
+    public String create(@RequestParam("name") String name, @RequestParam("password") String password, @RequestParam("role") String role) {
+        User user =  new User(name, password, role);
+        System.out.println(user);
+         userService.save(user);
+        System.out.println("before create");
         return "redirect:admin/";
     }
 

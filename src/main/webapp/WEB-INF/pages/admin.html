@@ -11,7 +11,7 @@
 
     <table>
     <th:block th:each="user : ${users}">
-        <tr><td th:text="${user.name}" />
+        <tr><td th:text="${user.id}" /><td th:text="${user.name}" />
             <td>
                 <form th:method="DELETE" th:action="@{/{id}(id=${user.getId()})}">
                 <input th:type="submit" th:value="Delete">
